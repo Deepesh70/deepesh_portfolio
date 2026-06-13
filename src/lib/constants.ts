@@ -23,7 +23,7 @@ export const navLinks = [
 export const stats = [
   { label: "Core Projects", value: 5 },
   { label: "Tech Stack", value: 15 },
-  { label: "GitHub Commits", value: "Active" }, // Replace with a real metric or script
+  { label: "GitHub Commits", value: "1200+" }, 
 ];
 
 export const skillCategories = [
