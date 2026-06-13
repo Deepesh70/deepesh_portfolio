@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* ── Hand-Drawn Design Tokens ── */
+@theme inline {
+  --color-paper: #fdfbf7;
+  --color-pencil: #2d2d2d;
+  --color-erased: #e5e0d8;
+  --color-marker: #ff4d4d;
+  --color-pen: #2d5da1;
+  --color-postit: #fff9c4;
+  --color-white: #ffffff;
+
+  --font-heading: var(--font-kalam);
+  --font-body: var(--font-patrick-hand);
+
+  --shadow-hard: 4px 4px 0px 0px #2d2d2d;
+  --shadow-hard-lg: 8px 8px 0px 0px #2d2d2d;
+  --shadow-hard-sm: 2px 2px 0px 0px #2d2d2d;
+  --shadow-hard-subtle: 3px 3px 0px 0px rgba(45, 45, 45, 0.1);
+}
+
+/* ── Custom Properties for Wobbly Borders ── */
+:root {
+  --wobbly: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --wobbly-md: 15px 225px 15px 255px / 255px 15px 225px 15px;
+  --wobbly-sm: 185px 10px 195px 10px / 10px 195px 10px 185px;
+  --wobbly-alt: 30px 200px 20px 225px / 200px 30px 225px 20px;
+}
+
+/* ── Base Styles ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-pencil);
+  font-family: var(--font-body);
+  background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+  background-size: 24px 24px;
+  overflow-x: hidden;
+}
+
+/* ── Wobbly Border Utilities ── */
+.wobbly {
+  border-radius: var(--wobbly);
+}
+
+.wobbly-md {
+  border-radius: var(--wobbly-md);
+}
+
+.wobbly-sm {
+  border-radius: var(--wobbly-sm);
+}
+
+.wobbly-alt {
+  border-radius: var(--wobbly-alt);
+}
+
+/* ── Tape Decoration ── */
+.tape::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 80px;
+  height: 24px;
+  background: rgba(200, 200, 180, 0.45);
+  border-radius: 2px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Tack Decoration ── */
+.tack::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--color-marker);
+  border-radius: 50%;
+  border: 2px solid var(--color-pencil);
+  box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Wavy Underline ── */
+.wavy-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.wavy-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6'%3E%3Cpath d='M0 3 Q5 0 10 3 T20 3' fill='none' stroke='%23ff4d4d' stroke-width='1.5'/%3E%3C/svg%3E")
+    repeat-x;
+  background-size: 20px 6px;
+}
+
+/* ── Drop Cap ── */
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-heading);
+  font-size: 3.5em;
+  line-height: 0.8;
+  margin-right: 8px;
+  margin-top: 4px;
+  color: var(--color-marker);
+  font-weight: 700;
+}
+
+/* ── Selection Styling ── */
+::selection {
+  background-color: var(--color-postit);
+  color: var(--color-pencil);
+}
+
+/* ── Scrollbar Styling ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-erased);
+  border: 2px solid var(--color-pencil);
+  border-radius: var(--wobbly-sm);
+}
+
+/* ── Animations ── */
+@keyframes gentle-bounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3deg);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: gentle-bounce 3s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.3s ease-in-out;
+}
