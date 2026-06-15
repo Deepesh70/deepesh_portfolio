@@ -8,9 +8,12 @@ import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 export default function Home() {
   return (
     <>
+    <SpeedInsights />
       <Navbar />
       <main>
         <Hero />
