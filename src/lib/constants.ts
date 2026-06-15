@@ -44,7 +44,7 @@ export const skillCategories = [
 
 export const projects = [
   {
-    title: "AdaptiveGrade",
+    title: "ScholarDive",
     description:
       "An asynchronous AI platform that processes academic PDFs to generate modular lesson content and quizzes. Engineered with FastAPI, Celery, and Redis to handle non-blocking, compute-heavy processing.",
     tags: ["FastAPI", "Celery", "Redis", "AI Architecture"],
