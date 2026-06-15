@@ -90,24 +90,28 @@ export default function Projects() {
                 </div>
 
                 <div className="flex gap-3">
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-body text-base text-pen hover:text-marker transition-colors"
-                  >
-                    <ExternalLink size={16} strokeWidth={2.5} />
-                    Live
-                  </a>
-                  <a
-                    href={project.codeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-body text-base text-pen hover:text-marker transition-colors"
-                  >
-                    <Code2 size={16} strokeWidth={2.5} />
-                    Code
-                  </a>
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-body text-base text-pen hover:text-marker transition-colors"
+                    >
+                      <ExternalLink size={16} strokeWidth={2.5} />
+                      Live
+                    </a>
+                  )}
+                  {project.codeUrl && (
+                    <a
+                      href={project.codeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-body text-base text-pen hover:text-marker transition-colors"
+                    >
+                      <Code2 size={16} strokeWidth={2.5} />
+                      Code
+                    </a>
+                  )}
                 </div>
               </Card>
             </div>

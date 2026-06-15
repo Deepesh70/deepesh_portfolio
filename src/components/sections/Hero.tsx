@@ -191,6 +191,7 @@ export default function Hero() {
               src="/images/me1.jpeg"
               alt={`Portrait of ${siteConfig.name}`}
               fill
+              sizes="(min-width: 768px) 320px, 256px"
               className="object-cover"
               preload={true}
             />

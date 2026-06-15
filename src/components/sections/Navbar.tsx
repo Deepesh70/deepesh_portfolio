@@ -15,10 +15,51 @@ export default function Navbar() {
         {/* Logo */}
         <a
           href="#"
-          className="font-heading text-2xl md:text-3xl font-bold text-pencil hover:text-marker transition-colors duration-100"
+          className="flex items-center gap-2.5 group"
           style={{ transform: "rotate(-2deg)" }}
         >
-          {siteConfig.name}
+          {/* Hand-drawn monogram */}
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            className="transition-transform duration-200 group-hover:rotate-6"
+          >
+            {/* Wobbly circle border */}
+            <path
+              d="M20 2C28 1.5 36 8 37.5 16C39 24 35 34 26 37C17 40 6 35 3 26C0 17 6 5 14 2.5C16 2 18 2 20 2Z"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              className="text-pencil group-hover:text-marker transition-colors duration-200"
+            />
+            {/* Letter D - first */}
+            <text
+              x="10"
+              y="27"
+              fontFamily="var(--font-heading)"
+              fontSize="18"
+              fontWeight="700"
+              className="fill-pencil group-hover:fill-marker transition-colors duration-200"
+            >
+              D
+            </text>
+            {/* Letter D - second, slightly offset */}
+            <text
+              x="21"
+              y="27"
+              fontFamily="var(--font-heading)"
+              fontSize="18"
+              fontWeight="700"
+              className="fill-marker"
+            >
+              D
+            </text>
+          </svg>
+          <span className="font-heading text-xl md:text-2xl font-bold text-pencil group-hover:text-marker transition-colors duration-100">
+            {siteConfig.name}
+          </span>
         </a>
 
         {/* Desktop Links */}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- Wobbly circle -->
+  <path
+    d="M24 3C33.5 2.5 43 10 44.5 19.5C46 29 42 41 31 44.5C20 48 7 42 3.5 31C0 20 7 6 17 3.5C19 3 21.5 3 24 3Z"
+    fill="#fdfbf7"
+    stroke="#2d2d2d"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+  <!-- D - pencil -->
+  <text x="11" y="33" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#2d2d2d">D</text>
+  <!-- D - marker -->
+  <text x="25" y="33" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#ff4d4d">D</text>
+</svg>
