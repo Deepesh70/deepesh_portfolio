@@ -74,21 +74,44 @@ export default function Contact() {
 
     setIsSubmitting(true);
     try {
-      // Mock submit endpoint call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+      
+      if (!accessKey || accessKey.trim() === "") {
+        throw new Error("Missing Web3Forms Access Key. Please add your key to NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY in the .env.local file.");
+      }
 
-      setName("");
-      setEmail("");
-      setMessage("");
-      setErrors({});
-      setSubmitStatus({
-        type: "success",
-        text: "Message sent! I'll get back to you soon.",
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name,
+          email,
+          message,
+        }),
       });
-    } catch {
+
+      const result = await response.json();
+
+      if (result.success) {
+        setName("");
+        setEmail("");
+        setMessage("");
+        setErrors({});
+        setSubmitStatus({
+          type: "success",
+          text: "Message sent! I'll get back to you soon.",
+        });
+      } else {
+        throw new Error(result.message || "Failed to send message.");
+      }
+    } catch (error: any) {
       setSubmitStatus({
         type: "error",
-        text: "Failed to send message. Please try again.",
+        text: error.message || "Failed to send message. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
