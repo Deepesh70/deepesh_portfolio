@@ -124,5 +124,3 @@ export const experiences = [
       "Currently researching low-level ML mechanics while actively developing scalable full-stack applications and automated 3D systems. Focused on practical, complex engineering challenges over generic web development.",
   }
 ];
-
-export const testimonials = [];
