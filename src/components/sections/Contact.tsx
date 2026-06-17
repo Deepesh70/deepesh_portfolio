@@ -7,11 +7,21 @@ import Button from "@/components/ui/Button";
 import { gsap } from "@/lib/gsap";
 import { Mail, MapPin, Send } from "lucide-react";
 
+// Field length limits — kept in sync with the server (src/app/api/contact/route.ts).
+const MAX_NAME = 100;
+const MAX_MESSAGE = 5000;
+// Same RFC 5322 subset enforced on the server; duplicated here for instant feedback.
+const EMAIL_RE =
+  /^(?=.{1,254}$)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*\.[A-Za-z]{2,}$/;
+
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  // Honeypot field: visually hidden, ignored by real users. Filled only by bots
+  // that blindly populate every input. Sent to the server, which silently drops it.
+  const [botcheck, setBotcheck] = useState("");
 
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,14 +64,18 @@ export default function Contact() {
     const newErrors: { name?: string; email?: string; message?: string } = {};
     if (!name.trim()) {
       newErrors.name = "Name is required";
+    } else if (name.length > MAX_NAME) {
+      newErrors.name = `Name must be ${MAX_NAME} characters or fewer`;
     }
     if (!email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!EMAIL_RE.test(email.trim())) {
       newErrors.email = "Please enter a valid email address";
     }
     if (!message.trim()) {
       newErrors.message = "Message is required";
+    } else if (message.length > MAX_MESSAGE) {
+      newErrors.message = `Message must be ${MAX_MESSAGE} characters or fewer`;
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -74,44 +88,46 @@ export default function Contact() {
 
     setIsSubmitting(true);
     try {
-      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-      
-      if (!accessKey || accessKey.trim() === "") {
-        throw new Error("Missing Web3Forms Access Key. Please add your key to NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY in the .env.local file.");
-      }
-
-      const response = await fetch("https://api.web3forms.com/submit", {
+      // POST only the public payload to our own route handler. The Web3Forms
+      // access key lives on the server (WEB3FORMS_ACCESS_KEY) and is never
+      // exposed to the browser.
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: accessKey,
           name,
           email,
           message,
+          botcheck, // honeypot
         }),
       });
 
       const result = await response.json();
 
-      if (result.success) {
+      if (response.ok && result.success) {
         setName("");
         setEmail("");
         setMessage("");
+        setBotcheck("");
         setErrors({});
         setSubmitStatus({
           type: "success",
           text: "Message sent! I'll get back to you soon.",
         });
       } else {
+        // Use server-provided field errors when available, else a generic message.
+        if (result.errors) setErrors(result.errors);
         throw new Error(result.message || "Failed to send message.");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const text =
+        error instanceof Error ? error.message : "Failed to send message. Please try again.";
       setSubmitStatus({
         type: "error",
-        text: error.message || "Failed to send message. Please try again.",
+        text,
       });
     } finally {
       setIsSubmitting(false);
@@ -139,6 +155,19 @@ export default function Contact() {
               }}
             >
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot: hidden from real users (screen readers + sighted).
+                    Any value here means a bot filled it, and the server will drop it. */}
+                <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "auto", width: 1, height: 1, overflow: "hidden" }}>
+                  <label htmlFor="contact-company">Company</label>
+                  <input
+                    id="contact-company"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={botcheck}
+                    onChange={(e) => setBotcheck(e.target.value)}
+                  />
+                </div>
                 <div>
                   <label
                     htmlFor="contact-name"
@@ -150,6 +179,7 @@ export default function Contact() {
                     id="contact-name"
                     type="text"
                     placeholder="John Doe"
+                    maxLength={100}
                     value={name}
                     onChange={(e) => {
                       setName(e.target.value);
@@ -174,6 +204,7 @@ export default function Contact() {
                     id="contact-email"
                     type="email"
                     placeholder="john@example.com"
+                    maxLength={254}
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
@@ -198,6 +229,7 @@ export default function Contact() {
                     id="contact-message"
                     rows={5}
                     placeholder="Tell me about your project..."
+                    maxLength={5000}
                     value={message}
                     onChange={(e) => {
                       setMessage(e.target.value);
